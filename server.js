@@ -22,7 +22,28 @@ const ContactSchema = new mongoose.Schema({
 });
 
 const Contact = mongoose.model("Contact", ContactSchema);
+const UserSchema = new mongoose.Schema({
+  name: String,
+  email: String,
+  phone: String,
+  password: String,
+  createdAt: {
+    type: Date,
+    default: Date.now
+  }
+});
 
+const User = mongoose.model("User", UserSchema);
+
+app.post("/api/register", async (req, res) => {
+  try {
+    const newUser = new User(req.body);
+    await newUser.save();
+    res.status(201).json({ message: "User Registered Successfully" });
+  } catch (error) {
+    res.status(500).json({ error: "Server Error" });
+  }
+});
 app.post("/api/contact", async (req, res) => {
   try {
     const newContact = new Contact(req.body);
